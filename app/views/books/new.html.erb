@@ -1,3 +1,7 @@
+<% flash.each do |type, message| %>
+  <p style="color: <%= type == 'notice' ? 'green' : 'red' %>"><%= message %></p>
+<% end %>
+
 <div>
   <%= link_to "Back to books", books_path %>
 </div>

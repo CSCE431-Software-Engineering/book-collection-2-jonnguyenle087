@@ -28,9 +28,24 @@ class BooksController < ApplicationController
     respond_to do |format|
       if @book.save
         format.html { redirect_to book_url(@book), notice: "Book was successfully created." }
-        format.json { render :show, status: :created, location: @book }
+        format.json { render :show, status: :created, location: @book } 
+      elsif @book.title.blank?
+        format.html { redirect_to new_book_path, alert: "Title can't be blank." }
+        format.json { render json: { errors: ["Title can't be blank."] }, status: :unprocessable_entity }
+      elsif @book.author.blank?
+        format.html { redirect_to new_book_path, alert: "Author can't be blank." }
+        format.json { render json: { errors: ["Author can't be blank."] }, status: :unprocessable_entity }
+      elsif @book.price.blank?
+        format.html { redirect_to new_book_path, alert: "Price can't be blank." }
+        format.json { render json: { errors: ["Price can't be blank."] }, status: :unprocessable_entity }
+      elsif @book.date_published.blank?
+        format.html { redirect_to new_book_path, alert: "Date Published can't be blank." }
+        format.json { render json: { errors: ["Date Published can't be blank."] }, status: :unprocessable_entity }
       else
-        format.html { render :new, status: :unprocessable_entity, notice: "Error creating the book." }
+        format.html do
+          flash.now[:alert] = "Error creating the book."
+          render :new, status: :unprocessable_entity
+        end
         format.json { render json: { errors: @book.errors.full_messages }, status: :unprocessable_entity }
       end
     end
